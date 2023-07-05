@@ -1,20 +1,64 @@
 import './singleComic.scss';
-import xMen from '../../resources/img/x-men.png';
+import Spinner from '../spinner/Spinner';
+import ErrorMasage from '../errorMasage/ErrorMasage';
+import useMarvelService from '../../services/MarvelServices';
+import { useEffect, useState } from 'react';
 
-const SingleComic = () => {
-    return (
-        <div className="single-comic">
-            <img src={xMen} alt="x-men" className="single-comic__img"/>
-            <div className="single-comic__info">
-                <h2 className="single-comic__name">X-Men: Days of Future Past</h2>
-                <p className="single-comic__descr">Re-live the legendary first journey into the dystopian future of 2013 - where Sentinels stalk the Earth, and the X-Men are humanity's only hope...until they die! Also featuring the first appearance of Alpha Flight, the return of the Wendigo, the history of the X-Men from Cyclops himself...and a demon for Christmas!?</p>
-                <p className="single-comic__descr">144 pages</p>
-                <p className="single-comic__descr">Language: en-us</p>
-                <div className="single-comic__price">9.99$</div>
-            </div>
-            <a href="#" className="single-comic__back">Back to all</a>
-        </div>
-    )
+const SingleComic = (props) => {
+
+	const {loading, error, getComics, clearError} = useMarvelService();
+	const [comics, setComics] = useState();
+	const {comicsId} = props;
+	// const comicsId = 1003;
+
+	
+	useEffect(() =>{
+		updateComics();
+	}, [comicsId])
+
+
+	const	onComicsLoaded = (comics) => {
+		setComics(comics);
+	}
+	
+	const updateComics = () =>{
+		clearError();
+		if(!comicsId){
+			return;
+		}
+		getComics(comicsId)		
+		.then(onComicsLoaded);
+	}
+
+	const errorMasage = error ? <ErrorMasage/> : null;
+	const spiner = loading ? <Spinner/> : null;
+	const content = !(loading || error || !comics) ? <View comics={comics}/> : null;
+
+	console.log(comics)
+	return (
+			<div className="single-comic">
+				{errorMasage}
+				{spiner}
+				{content}
+			</div>
+	)
+}
+
+const View = ({comics}) =>{
+	const {title,price, thumbnail,pageCount,description, language} = comics;
+	return(
+		<>
+			<img src={thumbnail} alt={`${title}`} className="single-comic__img"/>
+					<div className="single-comic__info">
+							<h2 className="single-comic__name">{title}</h2>
+							<p className="single-comic__descr">{description}</p>
+							<p className="single-comic__descr">{ `${pageCount} pages`}</p>
+							<p className="single-comic__descr">Language: {language}</p>
+							<div className="single-comic__price">{price <= 0 ? `NOT AVAILABLE` : `${price}$` }</div>
+					</div>
+					<a href="#" className="single-comic__back">Back to all</a>
+		</>
+	)
 }
 
 export default SingleComic;

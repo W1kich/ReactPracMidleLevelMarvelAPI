@@ -1,20 +1,24 @@
 @import '../../style/variables.scss';
 
-.app {
-    &__banner {
-        width: 100%;
-        background-color: $dark;
-        height: 100px;
-        padding: 0 25px 0 45px;
-        display: grid;
-        grid-template-columns: 152px auto 133px;
-        &-text {
-            font-weight: bold;
-            font-size: 24px;
-            line-height: 32px;
-            color: #FFFFFF;
-            padding-left: 83px;
-            padding-top: 18px;
-        }
-    }
+.comicstop {
+	display: flex;
+	flex-direction: row;
+	align-items:center;
+	background: #232222;
+	&__avengers {
+		padding-left: 45px;
+	}
+	&__content {
+		color: #FFF;
+		font-size: 24px;
+		font-family: Roboto Condensed;
+		font-style: normal;
+		font-weight: 700;
+		line-height: normal;
+		padding-left: 83px;
+		padding-right: 427px;
+	}
+	&__avengerslogo {
+		padding-right: 25px;
+	}
 }
