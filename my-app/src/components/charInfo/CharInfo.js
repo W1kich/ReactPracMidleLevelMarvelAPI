@@ -5,6 +5,7 @@ import useMarvelService from '../../services/MarvelServices';
 import Spinner from '../spinner/Spinner';
 import ErrorMasage from '../errorMasage/ErrorMasage';
 import Skeleton from '../skeleton/Skeleton';
+import {Link} from 'react-router-dom';
 
 const CharInfo = (props) => {
 
@@ -80,9 +81,11 @@ const View = ({char}) =>{
 							if(i>9) return null;
 							
 							return(
-								<li key = {i} className="char__comics-item">
-									{item.name} 
-								</li>
+								<Link to={`/comics/${item.resourceURI.slice(43)}`} className="char__comics-item">
+									<li key = {i} >
+										{item.name} 
+									</li>
+								</Link>
 							)
 						})
 					}

@@ -3,7 +3,10 @@ import { useState, useEffect } from 'react';
 import useMarvelService from '../../services/MarvelServices';
 import Spinner from '../spinner/Spinner';
 import ErrorMasage from '../errorMasage/ErrorMasage';
-const ComicsList = (props) =>{
+import { Link } from 'react-router-dom';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+
+const ComicsList = () =>{
 	
 	const {loading, error, getAllComics} = useMarvelService();
 	
@@ -36,38 +39,49 @@ const ComicsList = (props) =>{
 		setComicsEnded(ended);
 	}
 
-	const elements = comicsList.map((item)=> {
-		let imgFit = 'cover';
-		if(item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' || item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/f/60/4c002e0305708.gif'){
-			imgFit = 'unset';
-		}
-		return (
-			<li key = {item.id} className="comicslist__item">
-			<a href="">
-				<div className="comicslist__item__img">
-					<img src={item.thumbnail} style={{ objectFit: `${imgFit}`}} alt={item.title} />
-				</div>
-				<div className="comicslist__item__title">
-					{item.title}
-				</div>
-				<div className="comicslist__item__price">
-					{item.price <= 0 ? `NOT AVAILABLE` : `${item.price}$` }
-				</div>
-			</a>
-		</li>
-		);
-	});
+	const itemsList = (arr) =>{
+		const elements = arr.map((item, i)=> {
+			let imgFit = 'cover';
+			if(item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' || item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/f/60/4c002e0305708.gif'){
+				imgFit = 'unset';
+			}
+			return (
+				<CSSTransition key = {i} classNames={"comicslist__item"} timeout={700}>
+					<li className="comicslist__item">
+						<Link to={`/comics/${item.id}`}>
+						<div className="comicslist__item__img">
+							<img src={item.thumbnail} style={{ objectFit: `${imgFit}`}} alt={item.title} />
+						</div>
+						<div className="comicslist__item__title">
+							{item.title}
+						</div>
+						<div className="comicslist__item__price">
+							{item.price}
+						</div>
+						</Link>
+					</li>
+				</CSSTransition>
+			);
+		});
+
+		return(
+			<ul className="comicslist__grid">
+			<TransitionGroup component={null}>
+				{elements}
+			</TransitionGroup>
+			</ul>
+		)
+	} 
 	
 	const errorMasage = error ? <ErrorMasage/> : null;
 	const spiner = loading && !newItemLoading ? <Spinner/> : null;
+	const item = itemsList(comicsList);
 
 	return(
 		<div className="comicslist">
 			{spiner}
 			{errorMasage}
-			<ul className="comicslist__grid">
-				{elements}
-			</ul>
+			{item}
 			<button 
 			disabled={newItemLoading}
 			style={{'display': comicsEnded ? 'none' : 'block'}}
