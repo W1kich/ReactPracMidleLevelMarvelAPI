@@ -47,7 +47,7 @@ const CharInfo = (props) => {
 }
 
 const View = ({char}) =>{
-	const {name, description, thumbnail, homepage, wiki, comics} = char;
+	const {id ,name, description, thumbnail, homepage, wiki, comics} = char;
 	let imgFit = 'cover';
 
 	if(thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' || thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/f/60/4c002e0305708.gif'){
@@ -57,7 +57,9 @@ const View = ({char}) =>{
 	return(
 		<>
 			<div className="char__basics">
-				<img src={thumbnail} alt={name} style={{ objectFit: `${imgFit}`}}/>
+				<Link to={`/characters/${id}`}>
+					<img src={thumbnail} alt={name} style={{ objectFit: `${imgFit}`}}/>
+				</Link>
 					<div>
 							<div className="char__info-name">{name}</div>
 							<div className="char__btns">
